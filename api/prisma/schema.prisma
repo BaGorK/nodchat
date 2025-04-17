@@ -24,8 +24,8 @@ model User {
   gender     Gender
   profilePic String
 
-  conversationsIds String[]
   conversations    Conversation[]
+  conversationsIds String[]
   messages         Message[]
 }
 
@@ -34,11 +34,10 @@ model Conversation {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  participantIds String[]
   participants   User[]
-
-  messageIds String[]
-  messages   Message[]
+  participantIds String[]
+  messages       Message[]
+  messageIds     String[]
 }
 
 model Message {
@@ -48,9 +47,8 @@ model Message {
 
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id])
-
-  senderId String
-  sender   User   @relation(fields: [senderId], references: [id])
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
 
   body String
 }
