@@ -1,10 +1,10 @@
-import bcrypt from "bcryptjs";
-import { Request, Response } from "express";
-import { prisma } from "../db/prisma-service";
-import { isCorrectPassword } from "../lib/utils/password.util";
-import { generateTokenAndSetCookie } from "../lib/utils/twt-token.util";
-import { loginSchema } from "../zod-schemas/login.schema";
-import { signupSchema } from "../zod-schemas/signup.schema";
+import bcrypt from 'bcryptjs';
+import { Request, Response } from 'express';
+import { prisma } from '../db/prisma-service';
+import { isCorrectPassword } from '../lib/utils/password.util';
+import { generateTokenAndSetCookie } from '../lib/utils/twt-token.util';
+import { loginSchema } from '../zod-schemas/login.schema';
+import { signupSchema } from '../zod-schemas/signup.schema';
 
 export default class AuthController {
   public async login(req: Request, res: Response) {
@@ -12,8 +12,8 @@ export default class AuthController {
     if (!result.success) {
       const validationErrors = result.error.errors.map((err) => err.message);
       res.status(400).json({
-        status: "fail",
-        message: "validation faild.",
+        status: 'fail',
+        message: 'validation faild.',
         error: validationErrors,
       });
       return;
@@ -32,8 +32,8 @@ export default class AuthController {
         }))
       ) {
         res.status(400).json({
-          status: "fail",
-          message: "Invalid Credentials",
+          status: 'fail',
+          message: 'Invalid Credentials',
         });
         return;
       }
@@ -43,24 +43,24 @@ export default class AuthController {
 
       // return response
       res.status(200).json({
-        status: "login",
-        message: "Login successfully",
+        status: 'login',
+        message: 'Login successfully',
         data: user,
       });
     } catch (err) {
-      console.log("login: ", err);
+      console.log('login: ', err);
       res.status(500).json({
-        status: "error",
+        status: 'error',
         message: (err as Error).message,
       });
     }
   }
 
   logout(req: Request, res: Response) {
-    res.clearCookie("accessToken");
+    res.clearCookie('accessToken');
     res.status(200).json({
-      status: "success",
-      message: "Logout successfully",
+      status: 'success',
+      message: 'Logout successfully',
       data: null,
     });
   }
@@ -70,12 +70,10 @@ export default class AuthController {
       const result = signupSchema.safeParse(req.body);
 
       if (!result.success) {
-        const validationErrors = result.error.errors.map(
-          (error) => error.message,
-        );
+        const validationErrors = result.error.errors.map((error) => error.message);
         res.status(400).json({
-          status: "fail",
-          message: "validation faild.",
+          status: 'fail',
+          message: 'validation faild.',
           error: validationErrors,
         });
         return;
@@ -90,8 +88,8 @@ export default class AuthController {
 
       if (user) {
         res.status(400).json({
-          status: "fail",
-          message: "Username already taken",
+          status: 'fail',
+          message: 'Username already taken',
         });
         return;
       }
@@ -106,21 +104,21 @@ export default class AuthController {
           gender,
           username,
           password: await bcrypt.hash(password, 10),
-          profilePic: gender === "male" ? boyProfilePic : girlProfilePic,
+          profilePic: gender === 'male' ? boyProfilePic : girlProfilePic,
         },
       });
 
       generateTokenAndSetCookie(user, res);
 
       res.status(201).json({
-        status: "success",
-        message: "User created successfully",
+        status: 'success',
+        message: 'User created successfully',
         data: user,
       });
     } catch (err) {
-      console.log("signup: ", err);
+      console.log('signup: ', err);
       res.status(500).json({
-        status: "error",
+        status: 'error',
         message: (err as Error).message,
       });
     }
