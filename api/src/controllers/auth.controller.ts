@@ -1,12 +1,57 @@
 import bcrypt from 'bcryptjs';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { prisma } from '../db/prisma-service';
 import { isCorrectPassword } from '../lib/utils/password.util';
-import { generateTokenAndSetCookie } from '../lib/utils/twt-token.util';
+import { generateTokenAndSetCookie, verifyJWT } from '../lib/utils/twt-token.util';
 import { loginSchema } from '../zod-schemas/login.schema';
 import { signupSchema } from '../zod-schemas/signup.schema';
+import { User } from '@prisma/client';
+
+// add current user to the express request namespace
+declare global {
+  namespace Express {
+    interface Request {
+      user: User;
+    }
+  }
+}
 
 export default class AuthController {
+  public async protect(req: Request, res: Response, next: NextFunction) {
+    let accessToken;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      accessToken = req.headers.authorization.split(' ')[1];
+    } else if (req.cookies.accessToken) {
+      accessToken = req.cookies.accessToken;
+    }
+
+    if (!accessToken) {
+      res.status(401).json({
+        status: 'fail',
+        message: 'You are not logged in! Please log in to get access.',
+      });
+      return;
+    }
+
+    // 2) Verification token
+    const decoded = verifyJWT(accessToken);
+    const currentUser = await prisma.user.findUnique({ where: { id: decoded.id } });
+
+    if (!currentUser) {
+      res.status(401).json({
+        status: 'fail',
+        message: 'The User belonging to the token doe no longer exist',
+      });
+
+      return;
+    }
+
+    req.user = currentUser;
+    // GRANT ACCESS TO PROTECTED ROUTE
+    console.log('GRANT ACCESS TO PROTECTED ROUTE...');
+    next();
+  }
+
   public async login(req: Request, res: Response) {
     const result = loginSchema.safeParse(req.body);
     if (!result.success) {
