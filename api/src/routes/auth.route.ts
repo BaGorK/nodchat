@@ -7,6 +7,13 @@ const router = express.Router();
 
 router.post('/login', (req, res) => authController.login(req, res));
 router.post('/signup', (req, res) => authController.signup(req, res));
+
+// protected routes
+router.get(
+  '/current-user',
+  (req, res, next) => authController.protect(req, res, next),
+  (req, res) => authController.getCurrentUser(req, res),
+);
 router.post(
   '/logout',
   (req, res, next) => authController.protect(req, res, next),

@@ -18,38 +18,69 @@ declare global {
 
 export default class AuthController {
   public async protect(req: Request, res: Response, next: NextFunction) {
-    let accessToken;
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      accessToken = req.headers.authorization.split(' ')[1];
-    } else if (req.cookies.accessToken) {
-      accessToken = req.cookies.accessToken;
-    }
+    try {
+      let accessToken;
+      if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        accessToken = req.headers.authorization.split(' ')[1];
+      } else if (req.cookies.accessToken) {
+        accessToken = req.cookies.accessToken;
+      }
 
-    if (!accessToken) {
-      res.status(401).json({
-        status: 'fail',
-        message: 'You are not logged in! Please log in to get access.',
+      if (!accessToken) {
+        res.status(401).json({
+          status: 'fail',
+          message: 'You are not logged in! Please log in to get access.',
+        });
+        return;
+      }
+
+      // 2) Verification token
+      const decoded = verifyJWT(accessToken);
+      const currentUser = await prisma.user.findUnique({ where: { id: decoded.id } });
+
+      if (!currentUser) {
+        res.status(401).json({
+          status: 'fail',
+          message: 'The User belonging to the token doe no longer exist',
+        });
+
+        return;
+      }
+
+      req.user = currentUser;
+      // GRANT ACCESS TO PROTECTED ROUTE
+      console.log('GRANT ACCESS TO PROTECTED ROUTE...');
+      next();
+    } catch (err) {
+      res.status(500).json({
+        status: 'error',
+        message: 'Invalid token. Please log in again',
       });
-      return;
     }
+  }
 
-    // 2) Verification token
-    const decoded = verifyJWT(accessToken);
-    const currentUser = await prisma.user.findUnique({ where: { id: decoded.id } });
-
-    if (!currentUser) {
-      res.status(401).json({
-        status: 'fail',
-        message: 'The User belonging to the token doe no longer exist',
+  public async getCurrentUser(req: Request, res: Response) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: req.user.id,
+        },
+        select: {
+          password: false,
+        },
       });
 
-      return;
+      res.status(200).json({
+        status: 'success',
+        message: 'User fetched successfully',
+        data: user,
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: 'error',
+        message: (err as Error).message,
+      });
     }
-
-    req.user = currentUser;
-    // GRANT ACCESS TO PROTECTED ROUTE
-    console.log('GRANT ACCESS TO PROTECTED ROUTE...');
-    next();
   }
 
   public async login(req: Request, res: Response) {
