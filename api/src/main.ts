@@ -1,8 +1,16 @@
-import "dotenv/config";
+import "./config/validate-env";
 import express, { Request, Response } from "express";
 import { authRouter, messageRouter } from "./routes";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 
 const app = express();
+
+app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+app.use(cookieParser()); // for parsing cookies
+app.use(cors()); // for enabling cors
 
 app.get("/api", (_req: Request, res: Response) => {
   res.send(

@@ -18,11 +18,11 @@ model User {
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
-  username   String @unique
+  username   String  @unique
   fullName   String
   password   String
+  profilePic String? @default("https://res.cloudinary.com/dvp1mjhd9/image/upload/v1714690850/default_profile_image.png")
   gender     Gender
-  profilePic String
 
   conversations    Conversation[]
   conversationsIds String[]
