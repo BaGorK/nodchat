@@ -1,18 +1,19 @@
 import bcrypt from 'bcryptjs';
 import { NextFunction, Request, Response } from 'express';
 import { prisma } from '../db/prisma-service';
+import { getProfilePicture } from '../lib/utils/get-profile-picture.util';
 import { isCorrectPassword } from '../lib/utils/password.util';
 import { generateTokenAndSetCookie, verifyJWT } from '../lib/utils/twt-token.util';
 import { loginSchema } from '../zod-schemas/login.schema';
 import { signupSchema } from '../zod-schemas/signup.schema';
-import { User } from '@prisma/client';
-import { getProfilePicture } from '../lib/utils/get-profile-picture.util';
 
 // add current user to the express request namespace
 declare global {
   namespace Express {
     interface Request {
-      user: User;
+      user: {
+        id: string;
+      };
     }
   }
 }
