@@ -6,6 +6,7 @@ import { generateTokenAndSetCookie, verifyJWT } from '../lib/utils/twt-token.uti
 import { loginSchema } from '../zod-schemas/login.schema';
 import { signupSchema } from '../zod-schemas/signup.schema';
 import { User } from '@prisma/client';
+import { getProfilePicture } from '../lib/utils/get-profile-picture.util';
 
 // add current user to the express request namespace
 declare global {
@@ -171,8 +172,7 @@ export default class AuthController {
       }
 
       // https://avatar-placeholder.iran.liara.run/
-      const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
-      const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
+      const profilePic = getProfilePicture(gender, username);
 
       user = await prisma.user.create({
         data: {
@@ -180,7 +180,7 @@ export default class AuthController {
           gender,
           username,
           password: await bcrypt.hash(password, 10),
-          profilePic: gender === 'male' ? boyProfilePic : girlProfilePic,
+          profilePic,
         },
       });
 
