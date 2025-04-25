@@ -67,17 +67,11 @@ export default class AuthController {
         where: {
           id: req.user.id,
         },
-        select: {
-          password: false,
-        },
       });
 
-      res.status(200).json({
-        status: 'success',
-        message: 'User fetched successfully',
-        data: user,
-      });
+      res.status(200).json(user);
     } catch (err) {
+      console.log('getCurrentUser: ', err);
       res.status(500).json({
         status: 'error',
         message: (err as Error).message,
@@ -120,11 +114,7 @@ export default class AuthController {
       generateTokenAndSetCookie(user, res);
 
       // return response
-      res.status(200).json({
-        status: 'login',
-        message: 'Login successfully',
-        data: user,
-      });
+      res.status(200).json(user);
     } catch (err) {
       console.log('login: ', err);
       res.status(500).json({
@@ -187,11 +177,7 @@ export default class AuthController {
 
       generateTokenAndSetCookie(user, res);
 
-      res.status(201).json({
-        status: 'success',
-        message: 'User created successfully',
-        data: user,
-      });
+      res.status(201).json(user);
     } catch (err) {
       console.log('signup: ', err);
       res.status(500).json({

@@ -10,7 +10,7 @@ router.post('/signup', (req, res) => authController.signup(req, res));
 
 // protected routes
 router.get(
-  '/current-user',
+  '/me',
   (req, res, next) => authController.protect(req, res, next),
   (req, res) => authController.getCurrentUser(req, res),
 );
