@@ -49,11 +49,7 @@ export class MessageController {
 
       // TODO: implement socket.io
 
-      res.status(201).json({
-        status: 'success',
-        message: 'Message sent successfully',
-        data: newMessage,
-      });
+      res.status(201).json(newMessage);
     } catch (err) {
       console.log('[MessageController:sendMessage]: ', err);
       res.status(500).json({
@@ -93,11 +89,7 @@ export class MessageController {
         return;
       }
 
-      res.status(200).json({
-        status: 'success',
-        message: 'Messages fetched successfully',
-        data: conversation.messages,
-      });
+      res.status(200).json(conversation.messages);
     } catch (err) {
       console.log('[MessageController:getMessages]: ', err);
       res.status(500).json({
@@ -125,11 +117,7 @@ export class MessageController {
         },
       });
 
-      res.status(200).json({
-        status: 'success',
-        message: 'Users fetched successfully',
-        data: users,
-      });
+      res.status(200).json(users);
     } catch (err) {
       console.log('[MessageController:getConversations]: ', err);
       res.status(500).json({

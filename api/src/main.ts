@@ -24,7 +24,14 @@ app.get('/api', (_req: Request, res: Response) => {
 });
 
 app.use('/api/auth', authRouter);
-app.use('/api/message', messageRouter);
+app.use('/api/messages', messageRouter);
+
+app.use('*', (_req: Request, res: Response) => {
+  res.status(404).json({
+    status: 'fail',
+    message: 'Route not found',
+  });
+});
 
 app.listen(5000, () => {
   console.log('app listening on port 5000...');

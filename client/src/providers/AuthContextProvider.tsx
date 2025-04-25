@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect } from 'react';
-import toast from 'react-hot-toast';
 
 enum Gender {
   male = 'male',
@@ -44,7 +43,6 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
         handleSetAuthUser(data);
       } catch (err) {
         console.error('Error fetching user:', err);
-        toast.error((err as Error).message);
       } finally {
         setIsLoading(false);
       }
