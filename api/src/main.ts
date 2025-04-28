@@ -4,8 +4,7 @@ import { authRouter, messageRouter } from './routes';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import morgan from 'morgan';
-
-const app = express();
+import { app, server } from './socket/socket';
 
 app.use(morgan('dev')); // for logging requests
 app.use(express.json()); // for parsing application/json
@@ -33,6 +32,6 @@ app.use('*', (_req: Request, res: Response) => {
   });
 });
 
-app.listen(5000, () => {
+server.listen(5000, () => {
   console.log('app listening on port 5000...');
 });
