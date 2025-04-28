@@ -9,7 +9,7 @@ interface ISocketContext {
 
 const SocketContext = createContext<ISocketContext | null>(null);
 
-const socketURL = import.meta.env.NODE_ENV === 'development' ? 'http://localhost:5000' : '/'; // '/' bc the frontend the backend will be deployed on the same server.
+const socketURL = import.meta.env.MODE === 'development' ? 'http://localhost:5000' : '/'; // '/' bc the frontend the backend will be deployed on the same server.
 
 export const SocketContextProvider = ({ children }: { children: React.ReactNode }) => {
   const socketRef = useRef<Socket | null>(null);
