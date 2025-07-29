@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} api/prisma/seed.ts"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "cd client && pnpm dev",
     "server": "nodemon api/src/main.ts",
-    "dev": "concurrently --kill-others-on-fail \"pnpm run server\" \"pnpm run client\""
+    "dev": "concurrently --kill-others-on-fail \"pnpm run server\" \"pnpm run client\"",
+    "build": "tsc && npm install && prisma generate --schema=./api/prisma/schema.prisma && npm install --prefix client && npm run build --prefix client",
+    "start": "node api/dist/src/index.js"
   },
   "keywords": [],
   "author": "",
