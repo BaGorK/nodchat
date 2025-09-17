@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "client": "cd client && pnpm dev",
-    "server": "nodemon api/src/main.ts",
+    "client": "cd nodchat-front && pnpm dev",
+    "server": "nodemon nodchat-back/src/main.ts",
     "dev": "concurrently --kill-others-on-fail \"pnpm run server\" \"pnpm run client\"",
-    "build": "tsc && npm install && prisma generate --schema=./api/prisma/schema.prisma && npm install --prefix client && npm run build --prefix client",
-    "start": "node api/dist/src/index.js"
+    "build": "tsc && npm install && prisma generate --schema=./nodchat-back/prisma/schema.prisma && npm install --prefix client && npm run build --prefix client",
+    "start": "node nodchat-back/dist/src/index.js"
   },
   "keywords": [],
   "author": "",

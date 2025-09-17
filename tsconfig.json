@@ -2,13 +2,13 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "commonjs",
-    "outDir": "./api/dist", // Redirect output structure to the directory.
-    "rootDir": "./api",
+    "outDir": "./nodchat-back/dist", // Redirect output structure to the directory.
+    "rootDir": "./nodchat-back",
     "strict": true, // Enable all strict type-checking options.
     "esModuleInterop": true, // This will allow you to use default imports with CommonJS modules.
     "skipLibCheck": true, // this option will skip type checking all .d.ts files.
     "noUnusedLocals": true
   },
-  "include": ["api/src/**/*"], // Specifies which files to include when compiling your project.
-  "exclude": ["node_modules", "**/*.spec.ts", "client"] // Specifies which files to exclude when compiling your project.
+  "include": ["nodchat-back/src/**/*"], // Specifies which files to include when compiling your project.
+  "exclude": ["node_modules", "**/*.spec.ts", "nodchat-front"] // Specifies which files to exclude when compiling your project.
 }
